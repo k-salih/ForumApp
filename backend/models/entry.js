@@ -17,3 +17,5 @@ entrySchema.set('toJSON', {
 })
 
 const Entry = mongoose.model('Entry', entrySchema)
+
+export default Entry
