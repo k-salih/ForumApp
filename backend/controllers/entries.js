@@ -12,7 +12,7 @@ entryRouter.get('/', async (req, res) => {
 /// GET ENTRY BY ID
 entryRouter.get('/:id', async (req, res) => {
   const entry = await Entry.findById(req.params.id).populate('user', { username: 1, email: 1 })
-  res.json(entry)
+  entry ? res.json(entry) : res.status(404).end()
 })
 
 /// POST NEW ENTRY
@@ -41,6 +41,10 @@ entryRouter.put('/:id', async (req, res) => {
     updatedAt: Date.now(),
   }
 
+  if (entry.content && entry.content.length < 3) {
+    return res.status(400).json({ error: 'Content must be at least 3 characters long' })
+  }
+
   const updated = await Entry.findByIdAndUpdate(req.params.id, entry, { new: true })
   res.json(updated)
 })
@@ -48,6 +52,10 @@ entryRouter.put('/:id', async (req, res) => {
 /// DELETE ENTRY
 entryRouter.delete('/:id', async (req, res) => {
   await Entry.findByIdAndRemove(req.params.id)
+
+  if (req.params.id) {
+    return res.status(404).json({ error: 'Entry not found' })
+  }
   res.status(204).end()
 })
 
