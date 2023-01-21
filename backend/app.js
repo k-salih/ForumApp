@@ -3,6 +3,9 @@ import config from './utils/config.js'
 import logger from './utils/logger.js'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import 'express-async-errors'
+
+import userRouter from './controllers/users.js'
 
 const app = express()
 
@@ -24,5 +27,7 @@ mongoose
 
 app.use(cors())
 app.use(express.json())
+
+app.use('/api/users', userRouter)
 
 export default app
