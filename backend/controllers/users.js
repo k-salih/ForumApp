@@ -41,6 +41,7 @@ userRouter.put('/:id', async (req, res) => {
   }
 
   const updated = await User.findByIdAndUpdate(req.params.id, user, { new: true })
+  res.json(updated)
 })
 
 /// DELETE USER
