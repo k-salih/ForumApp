@@ -5,13 +5,13 @@ const userRouter = Router()
 
 /// GET ALL USERS
 userRouter.get('/', async (req, res) => {
-  const users = await User.find({}).populate('entry', { title: 1, content: 1 })
+  const users = await User.find({}).populate('entries', { title: 1, content: 1 })
   res.json(users)
 })
 
 /// GET USER BY ID
 userRouter.get('/:id', async (req, res) => {
-  const user = await User.findById(req.params.id).populate('entry', { title: 1, content: 1 })
+  const user = await User.findById(req.params.id).populate('entries', { title: 1, content: 1 })
   res.json(user)
 })
 
