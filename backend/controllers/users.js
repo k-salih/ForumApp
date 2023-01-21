@@ -12,7 +12,7 @@ userRouter.get('/', async (req, res) => {
 /// GET USER BY ID
 userRouter.get('/:id', async (req, res) => {
   const user = await User.findById(req.params.id).populate('entries', { title: 1, content: 1 })
-  res.json(user)
+  user ? res.json(user) : res.status(404).end()
 })
 
 /// POST NEW USER
@@ -37,7 +37,13 @@ userRouter.put('/:id', async (req, res) => {
   const user = {
     username: body.username,
     name: body.name,
-    passwordHash: body.passwordHash,
+    password: body.password,
+  }
+
+  if (user.password && user.password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long' })
+  } else if (user.username && user.username.length < 3) {
+    return res.status(400).json({ error: 'Username must be at least 3 characters long' })
   }
 
   const updated = await User.findByIdAndUpdate(req.params.id, user, { new: true })
@@ -46,7 +52,11 @@ userRouter.put('/:id', async (req, res) => {
 
 /// DELETE USER
 userRouter.delete('/:id', async (req, res) => {
-  await User.findByIdAndRemove(req.params.id)
+  try {
+    await User.findByIdAndRemove(req.params.id)
+  } catch (error) {
+    return res.status(404).json({ error: 'User not found' })
+  }
   res.status(204).end()
 })
 
