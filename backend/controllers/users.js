@@ -52,11 +52,13 @@ userRouter.put('/:id', async (req, res) => {
 
 /// DELETE USER
 userRouter.delete('/:id', async (req, res) => {
-  try {
-    await User.findByIdAndRemove(req.params.id)
-  } catch (error) {
+  const userToDelete = await User.findById(req.params.id)
+
+  if (!userToDelete) {
     return res.status(404).json({ error: 'User not found' })
   }
+
+  await User.findByIdAndRemove(req.params.id)
   res.status(204).end()
 })
 

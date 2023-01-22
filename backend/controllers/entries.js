@@ -51,11 +51,13 @@ entryRouter.put('/:id', async (req, res) => {
 
 /// DELETE ENTRY
 entryRouter.delete('/:id', async (req, res) => {
-  await Entry.findByIdAndRemove(req.params.id)
+  const entryToDelete = await Entry.findById(req.params.id)
 
-  if (req.params.id) {
+  if (!entryToDelete) {
     return res.status(404).json({ error: 'Entry not found' })
   }
+
+  await Entry.findByIdAndRemove(req.params.id)
   res.status(204).end()
 })
 
