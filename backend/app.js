@@ -7,6 +7,7 @@ import 'express-async-errors'
 
 import userRouter from './controllers/users.js'
 import entryRouter from './controllers/entries.js'
+import errorHandler from './utils/middleware.js'
 
 const app = express()
 
@@ -31,5 +32,7 @@ app.use(express.json())
 
 app.use('/api/users', userRouter)
 app.use('/api/entries', entryRouter)
+
+app.use(errorHandler)
 
 export default app
