@@ -41,11 +41,7 @@ entryRouter.put('/:id', async (req, res) => {
     updatedAt: Date.now(),
   }
 
-  if (entry.content && entry.content.length < 3) {
-    return res.status(400).json({ error: 'Content must be at least 3 characters long' })
-  }
-
-  const updated = await Entry.findByIdAndUpdate(req.params.id, entry, { new: true })
+  const updated = await Entry.findByIdAndUpdate(req.params.id, entry, { new: true, runValidators: true, context: 'query' })
   res.json(updated)
 })
 

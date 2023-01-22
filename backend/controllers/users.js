@@ -40,13 +40,7 @@ userRouter.put('/:id', async (req, res) => {
     password: body.password,
   }
 
-  if (user.password && user.password.length < 6) {
-    return res.status(400).json({ error: 'Password must be at least 6 characters long' })
-  } else if (user.username && user.username.length < 3) {
-    return res.status(400).json({ error: 'Username must be at least 3 characters long' })
-  }
-
-  const updated = await User.findByIdAndUpdate(req.params.id, user, { new: true })
+  const updated = await User.findByIdAndUpdate(req.params.id, user, { new: true, runValidators: true, context: 'query' })
   res.json(updated)
 })
 
