@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import User from '../models/user.js'
+import bcrypt from 'bcrypt'
 
 const userRouter = Router()
 
@@ -19,10 +20,13 @@ userRouter.get('/:id', async (req, res) => {
 userRouter.post('/', async (req, res) => {
   const body = req.body
 
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(body.password, saltRounds)
+
   const user = new User({
     username: body.username,
     email: body.email,
-    password: body.password,
+    password: passwordHash,
   })
 
   const savedUser = await user.save()
@@ -33,6 +37,12 @@ userRouter.post('/', async (req, res) => {
 /// UPDATE USER
 userRouter.put('/:id', async (req, res) => {
   const body = req.body
+
+  if (body.password) {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(body.password, saltRounds)
+    body.password = passwordHash
+  }
 
   const user = {
     username: body.username,
