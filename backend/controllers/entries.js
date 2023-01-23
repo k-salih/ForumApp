@@ -50,12 +50,23 @@ entryRouter.post('/', async (req, res) => {
 
 /// UPDATE ENTRY
 entryRouter.put('/:id', async (req, res) => {
+  const entryToUpdate = await Entry.findById(req.params.id)
   const body = req.body
+  const token = getToken(req)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  const user = await User.findById(decodedToken.id)
+
+  if (!token || !decodedToken.id) {
+    return res.status(401).json({ error: 'Invalid or missing token' })
+  } else if (entryToUpdate.user.toString() !== user._id.toString()) {
+    return res.status(401).json({ error: 'Only the creator can change the entry' })
+  }
 
   const entry = {
     title: body.title,
     content: body.content,
-    user: body.user,
+    user: user._id,
     updatedAt: Date.now(),
   }
 
