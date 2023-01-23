@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import Entry from '../models/entry.js'
+import jwt from 'jsonwebtoken'
+import User from '../models/user.js'
 
 const entryRouter = Router()
 
@@ -16,13 +18,29 @@ entryRouter.get('/:id', async (req, res) => {
 })
 
 /// POST NEW ENTRY
+const getToken = (req) => {
+  const authorization = req.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
+
 entryRouter.post('/', async (req, res) => {
   const body = req.body
+  const token = getToken(req)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  if (!token || !decodedToken.id) {
+    return res.status(401).json({ error: 'Invalid or missing token' })
+  }
+
+  const user = await User.findById(decodedToken.id)
 
   const entry = new Entry({
     title: body.title,
     content: body.content,
-    user: body.user,
+    user: user._id,
   })
 
   const savedEntry = await entry.save()
