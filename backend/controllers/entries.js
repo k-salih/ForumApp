@@ -67,8 +67,12 @@ entryRouter.put('/:id', async (req, res) => {
 entryRouter.delete('/:id', async (req, res) => {
   const entryToDelete = await Entry.findById(req.params.id)
 
-  if (!entryToDelete) {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Invalid or missing token' })
+  } else if (!entryToDelete) {
     return res.status(404).json({ error: 'Entry not found' })
+  } else if (entryToDelete.user.toString() !== req.user.id.toString()) {
+    return res.status(401).json({ error: 'Only the creator can delete the entry' })
   }
 
   await Entry.findByIdAndRemove(req.params.id)
