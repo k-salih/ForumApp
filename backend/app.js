@@ -8,7 +8,7 @@ import 'express-async-errors'
 import userRouter from './controllers/users.js'
 import entryRouter from './controllers/entries.js'
 import loginRouter from './controllers/login.js'
-import errorHandler from './utils/middleware.js'
+import middleware from './utils/middleware.js'
 
 const app = express()
 
@@ -32,9 +32,9 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/users', userRouter)
-app.use('/api/entries', entryRouter)
+app.use('/api/entries', middleware.userExtractor, entryRouter)
 app.use('/api/login', loginRouter)
 
-app.use(errorHandler)
+app.use(middleware.errorHandler)
 
 export default app

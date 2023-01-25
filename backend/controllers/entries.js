@@ -18,24 +18,15 @@ entryRouter.get('/:id', async (req, res) => {
 })
 
 /// POST NEW ENTRY
-const getToken = (req) => {
-  const authorization = req.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}
 
 entryRouter.post('/', async (req, res) => {
   const body = req.body
-  const token = getToken(req)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
 
-  if (!token || !decodedToken.id) {
+  if (!req.user) {
     return res.status(401).json({ error: 'Invalid or missing token' })
   }
 
-  const user = await User.findById(decodedToken.id)
+  const user = req.user
 
   const entry = new Entry({
     title: body.title,
@@ -52,16 +43,14 @@ entryRouter.post('/', async (req, res) => {
 entryRouter.put('/:id', async (req, res) => {
   const entryToUpdate = await Entry.findById(req.params.id)
   const body = req.body
-  const token = getToken(req)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
 
-  const user = await User.findById(decodedToken.id)
-
-  if (!token || !decodedToken.id) {
+  if (!req.user) {
     return res.status(401).json({ error: 'Invalid or missing token' })
-  } else if (entryToUpdate.user.toString() !== user._id.toString()) {
+  } else if (entryToUpdate.user.toString() !== req.user.id.toString()) {
     return res.status(401).json({ error: 'Only the creator can change the entry' })
   }
+
+  const user = req.user
 
   const entry = {
     title: body.title,
