@@ -8,6 +8,7 @@ import 'express-async-errors'
 import userRouter from './controllers/users.js'
 import entryRouter from './controllers/entries.js'
 import loginRouter from './controllers/login.js'
+import titleRouter from './controllers/titles.js'
 import middleware from './utils/middleware.js'
 
 const app = express()
@@ -34,6 +35,7 @@ app.use(express.json())
 app.use('/api/users', userRouter)
 app.use('/api/entries', middleware.userExtractor, entryRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/titles', titleRouter)
 
 app.use(middleware.errorHandler)
 
