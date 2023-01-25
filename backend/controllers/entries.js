@@ -2,6 +2,7 @@ import { Router } from 'express'
 import Entry from '../models/entry.js'
 import jwt from 'jsonwebtoken'
 import User from '../models/user.js'
+import Title from '../models/title.js'
 
 const entryRouter = Router()
 
@@ -35,6 +36,17 @@ entryRouter.post('/', async (req, res) => {
   })
 
   const savedEntry = await entry.save()
+
+  const existingTitle = await Title.findOne({ name: req.body.title })
+
+  if (!existingTitle) {
+    const title = new Title({ name: req.body.title })
+    title.entries = title.entries.concat(savedEntry._id)
+    await title.save()
+  } else {
+    existingTitle.entries = existingTitle.entries.concat(savedEntry._id)
+    await existingTitle.save()
+  }
 
   user.entries = user.entries.concat(savedEntry._id)
   await user.save()
