@@ -36,6 +36,9 @@ entryRouter.post('/', async (req, res) => {
 
   const savedEntry = await entry.save()
 
+  user.entries = user.entries.concat(savedEntry._id)
+  await user.save()
+
   res.json(savedEntry)
 })
 
