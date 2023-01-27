@@ -32,7 +32,7 @@ mongoose
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/users', userRouter)
+app.use('/api/users', middleware.userExtractor, userRouter)
 app.use('/api/entries', middleware.userExtractor, entryRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/titles', titleRouter)

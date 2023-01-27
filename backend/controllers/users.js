@@ -66,4 +66,43 @@ userRouter.delete('/:id', async (req, res) => {
   res.status(204).end()
 })
 
+/// GET FOLLOWERS OF USER
+userRouter.get('/:id/followers', async (req, res) => {
+  const user = await User.findById(req.params.id).populate('followers', { username: 1, email: 1 })
+  user ? res.json(user.followers) : res.status(404).end()
+})
+
+/// GET WHO USER FOLLOWS
+userRouter.get('/:id/following', async (req, res) => {
+  const user = await User.findById(req.params.id).populate('following', { username: 1, email: 1 })
+  user ? res.json(user.following) : res.status(404).end()
+})
+
+/// FOLLOW USER
+userRouter.post('/:id/followers', async (req, res) => {
+  const userToFollow = await User.findById(req.params.id)
+
+  if (!req.user) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const user = await User.findById(req.user.id)
+
+  if (!userToFollow) {
+    return res.status(404).json({ error: 'User not found' })
+  }
+
+  if (userToFollow.followers.includes(user._id)) {
+    return res.status(400).json({ error: 'User already followed' })
+  }
+
+  userToFollow.followers = userToFollow.followers.concat(user._id)
+  await userToFollow.save()
+
+  user.following = user.following.concat(userToFollow._id)
+  await user.save()
+
+  res.status(200).end()
+})
+
 export default userRouter
