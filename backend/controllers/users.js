@@ -105,4 +105,31 @@ userRouter.post('/:id/followers', async (req, res) => {
   res.status(200).end()
 })
 
+/// UNFOLLOW USER
+userRouter.delete('/:id/followers', async (req, res) => {
+  const userToUnfollow = await User.findById(req.params.id)
+
+  if (!req.user) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const user = await User.findById(req.user.id)
+
+  if (!userToUnfollow) {
+    return res.status(404).json({ error: 'User not found' })
+  }
+
+  if (!userToUnfollow.followers.includes(user._id)) {
+    return res.status(400).json({ error: 'User not followed' })
+  }
+
+  userToUnfollow.followers = userToUnfollow.followers.filter((follower) => follower.toString() !== user._id.toString())
+  await userToUnfollow.save()
+
+  user.following = user.following.filter((following) => following.toString() !== userToUnfollow._id.toString())
+  await user.save()
+
+  res.status(200).end()
+})
+
 export default userRouter
