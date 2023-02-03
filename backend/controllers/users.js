@@ -20,13 +20,20 @@ userRouter.get('/:id', async (req, res) => {
 userRouter.post('/', async (req, res) => {
   const body = req.body
 
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(body.password, saltRounds)
+  if (!body.password) {
+    return res.status(400).json({ error: 'Password is required' })
+  } else if (body.password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long' })
+  } else {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(body.password, saltRounds)
+    body.password = passwordHash
+  }
 
   const user = new User({
     username: body.username,
     email: body.email,
-    password: passwordHash,
+    password: body.password,
   })
 
   const savedUser = await user.save()
@@ -38,7 +45,11 @@ userRouter.post('/', async (req, res) => {
 userRouter.put('/:id', async (req, res) => {
   const body = req.body
 
-  if (body.password) {
+  if (!body.password) {
+    return res.status(400).json({ error: 'Password is required' })
+  } else if (body.password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long' })
+  } else {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
     body.password = passwordHash
