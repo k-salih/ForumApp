@@ -45,11 +45,9 @@ userRouter.post('/', async (req, res) => {
 userRouter.put('/:id', async (req, res) => {
   const body = req.body
 
-  if (!body.password) {
-    return res.status(400).json({ error: 'Password is required' })
-  } else if (body.password.length < 6) {
+  if (body.password && body.password.length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters long' })
-  } else {
+  } else if (body.password) {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
     body.password = passwordHash
