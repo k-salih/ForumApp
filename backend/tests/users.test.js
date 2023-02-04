@@ -79,6 +79,29 @@ describe('When there are some users saved', () => {
       expect(usernames).not.toContain(userToDelete.username)
     })
   })
+
+  describe('user update', () => {
+    test('succeeds with status code 200 if id is valid', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToUpdate = usersAtStart[0]
+
+      const updatedUser = {
+        ...userToUpdate,
+        username: 'updatedusername',
+      }
+
+      await api.put(`/api/users/${userToUpdate.id}`).send(updatedUser).expect(200)
+
+      const usersAtEnd = await helper.usersInDb()
+
+      expect(usersAtEnd).toHaveLength(helper.initialUsers.length)
+
+      const usernames = usersAtEnd.map((u) => u.username)
+
+      expect(usernames).toContain(updatedUser.username)
+      expect(usernames).not.toContain(userToUpdate.username)
+    })
+  })
 })
 
 afterAll(async () => {
