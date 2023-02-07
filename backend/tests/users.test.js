@@ -199,6 +199,24 @@ describe('When there are some users saved', () => {
       expect(response.body.error).toContain('Password must be at least 6 characters long')
     })
   })
+
+  test('all followers are returned', async () => {
+    const usersInDb = await helper.usersInDb()
+    const user = usersInDb[0]
+
+    const response = await api.get(`/api/users/${user.id}/followers`).expect(200)
+
+    expect(response.body).toHaveLength(user.followers.length)
+  })
+
+  test('all following are returned', async () => {
+    const usersInDb = await helper.usersInDb()
+    const user = usersInDb[0]
+
+    const response = await api.get(`/api/users/${user.id}/following`).expect(200)
+
+    expect(response.body).toHaveLength(user.following.length)
+  })
 })
 
 afterAll(async () => {
