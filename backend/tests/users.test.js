@@ -213,6 +213,12 @@ describe('When there are some users saved', () => {
     expect(response.body).toHaveLength(user.followers.length)
   })
 
+  test('getting followers of non-existing user returns 404', async () => {
+    const validNonexistingId = '63dd1e990793eabf876854fb'
+
+    const response = await api.get(`/api/users/${validNonexistingId}/followers`).expect(404)
+  })
+
   test('all following are returned', async () => {
     const usersInDb = await helper.usersInDb()
     const user = usersInDb[0]
@@ -220,6 +226,12 @@ describe('When there are some users saved', () => {
     const response = await api.get(`/api/users/${user.id}/following`).expect(200)
 
     expect(response.body).toHaveLength(user.following.length)
+  })
+
+  test('getting following of non-existing user returns 404', async () => {
+    const validNonexistingId = '63dd1e990793eabf876854fb'
+
+    const response = await api.get(`/api/users/${validNonexistingId}/following`).expect(404)
   })
 
   describe('user follow', () => {
