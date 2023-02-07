@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import request from 'supertest'
 import app from '../app'
 import User from '../models/user'
-import bcrypt from 'bcrypt'
 
 import helper from './test_helper'
 
@@ -11,7 +10,14 @@ const api = request(app)
 describe('When there are some users saved', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-    await User.insertMany(helper.initialUsers)
+
+    await Promise.all(
+      helper.initialUsers.map(async (user) => {
+        const passwordHash = await helper.passwordHashGenerator(user.password)
+        const userObject = await new User({ ...user, password: passwordHash })
+        await userObject.save()
+      })
+    )
   })
 
   test('all users are returned with proper format', async () => {

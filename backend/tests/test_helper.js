@@ -1,4 +1,5 @@
 import User from '../models/user'
+import bcrypt from 'bcrypt'
 
 const initialUsers = [
   {
@@ -18,7 +19,14 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON())
 }
 
+const passwordHashGenerator = async (password) => {
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+  return passwordHash
+}
+
 export default {
   initialUsers,
   usersInDb,
+  passwordHashGenerator,
 }
