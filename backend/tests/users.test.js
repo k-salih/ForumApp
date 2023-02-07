@@ -302,6 +302,88 @@ describe('When there are some users saved', () => {
       expect(response.body.error).toContain('User already followed')
     })
   })
+
+  describe('user unfollow', () => {
+    test('succeeds with status code 200 if id is valid and user is logged in', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToUnfollow = usersAtStart[1]
+      const user = usersAtStart[0]
+
+      const loginCredentials = {
+        username: user.username,
+        password: 'testuser1',
+      }
+
+      const loginResponse = await api.post('/api/login').send(loginCredentials).expect(200)
+
+      await api
+        .post(`/api/users/${userToUnfollow.id}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(200)
+
+      const response = await api
+        .delete(`/api/users/${userToUnfollow.id}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(200)
+
+      const usersAtEnd = await helper.usersInDb()
+
+      expect(usersAtEnd[1].followers).toEqual([])
+      expect(usersAtEnd[0].following).toEqual([])
+    })
+
+    test('fails with status code 401 if user is not logged in', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToUnfollow = usersAtStart[1]
+
+      const response = await api.delete(`/api/users/${userToUnfollow.id}/followers`).expect(401)
+
+      const usersAtEnd = await helper.usersInDb()
+
+      expect(usersAtEnd[1].followers).toHaveLength(userToUnfollow.followers.length)
+
+      expect(response.body.error).toContain('token missing or invalid')
+    })
+
+    test('fails with status code 404 if user to unfollow is not found', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const user = usersAtStart[0]
+      const loginCredentials = {
+        username: user.username,
+        password: 'testuser1',
+      }
+
+      const loginResponse = await api.post('/api/login').send(loginCredentials).expect(200)
+
+      const validNonexistingId = '63dd1e990793eabf876854fb'
+
+      const response = await api
+        .delete(`/api/users/${validNonexistingId}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(404)
+
+      expect(response.body.error).toContain('User not found')
+    })
+
+    test('fails with status code 400 if user is not followed', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToUnfollow = usersAtStart[1]
+      const user = usersAtStart[0]
+      const loginCredentials = {
+        username: user.username,
+        password: 'testuser1',
+      }
+
+      const loginResponse = await api.post('/api/login').send(loginCredentials).expect(200)
+
+      const response = await api
+        .delete(`/api/users/${userToUnfollow.id}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(400)
+
+      expect(response.body.error).toContain('User not followed')
+    })
+  })
 })
 
 afterAll(async () => {
