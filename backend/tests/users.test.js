@@ -11,13 +11,11 @@ describe('When there are some users saved', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    await Promise.all(
-      helper.initialUsers.map(async (user) => {
-        const passwordHash = await helper.passwordHashGenerator(user.password)
-        const userObject = await new User({ ...user, password: passwordHash })
-        await userObject.save()
-      })
-    )
+    for (const user of helper.initialUsers) {
+      const passwordHash = await helper.passwordHashGenerator(user.password)
+      const userObject = await new User({ ...user, password: passwordHash })
+      await userObject.save()
+    }
   })
 
   test('all users are returned with proper format', async () => {
@@ -222,6 +220,87 @@ describe('When there are some users saved', () => {
     const response = await api.get(`/api/users/${user.id}/following`).expect(200)
 
     expect(response.body).toHaveLength(user.following.length)
+  })
+
+  describe('user follow', () => {
+    test('succeeds with status code 200 if id is valid and user is logged in', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToFollow = usersAtStart[1]
+      const user = usersAtStart[0]
+      const loginCredentials = {
+        username: user.username,
+        password: 'testuser1',
+      }
+
+      const loginResponse = await api.post('/api/login').send(loginCredentials).expect(200)
+
+      const response = await api
+        .post(`/api/users/${userToFollow.id}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(200)
+
+      const usersAtEnd = await helper.usersInDb()
+
+      expect(usersAtEnd[1].followers).toHaveLength(userToFollow.followers.length + 1)
+      expect(usersAtEnd[0].following).toHaveLength(user.following.length + 1)
+    })
+
+    test('fails with status code 401 if user is not logged in', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToFollow = usersAtStart[1]
+
+      const response = await api.post(`/api/users/${userToFollow.id}/followers`).expect(401)
+
+      const usersAtEnd = await helper.usersInDb()
+
+      expect(usersAtEnd[1].followers).toHaveLength(userToFollow.followers.length)
+
+      expect(response.body.error).toContain('token missing or invalid')
+    })
+
+    test('fails with status code 404 if user to follow is not found', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const user = usersAtStart[0]
+      const loginCredentials = {
+        username: user.username,
+        password: 'testuser1',
+      }
+
+      const loginResponse = await api.post('/api/login').send(loginCredentials).expect(200)
+
+      const validNonexistingId = '63dd1e990793eabf876854fb'
+
+      const response = await api
+        .post(`/api/users/${validNonexistingId}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(404)
+
+      expect(response.body.error).toContain('User not found')
+    })
+
+    test('fails with status code 400 if user already followed', async () => {
+      const usersAtStart = await helper.usersInDb()
+      const userToFollow = usersAtStart[1]
+      const user = usersAtStart[0]
+      const loginCredentials = {
+        username: user.username,
+        password: 'testuser1',
+      }
+
+      const loginResponse = await api.post('/api/login').send(loginCredentials).expect(200)
+
+      await api
+        .post(`/api/users/${userToFollow.id}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(200)
+
+      const response = await api
+        .post(`/api/users/${userToFollow.id}/followers`)
+        .set('Authorization', `Bearer ${loginResponse.body.token}`)
+        .expect(400)
+
+      expect(response.body.error).toContain('User already followed')
+    })
   })
 })
 
