@@ -1,4 +1,5 @@
 import User from '../models/user'
+import Entry from '../models/entry'
 import bcrypt from 'bcrypt'
 
 const initialUsers = [
@@ -14,9 +15,25 @@ const initialUsers = [
   },
 ]
 
+const initialEntries = [
+  {
+    title: 'Entry 1',
+    content: 'Entry 1 Content',
+  },
+  {
+    title: 'Entry 2',
+    content: 'Entry 2 Content',
+  },
+]
+
 const usersInDb = async () => {
   const users = await User.find({})
   return users.map((user) => user.toJSON())
+}
+
+const entriesInDb = async () => {
+  const entries = await Entry.find({}).populate('user', { username: 1, email: 1 })
+  return entries.map((entry) => entry.toJSON())
 }
 
 const passwordHashGenerator = async (password) => {
@@ -27,6 +44,8 @@ const passwordHashGenerator = async (password) => {
 
 export default {
   initialUsers,
+  initialEntries,
   usersInDb,
+  entriesInDb,
   passwordHashGenerator,
 }
