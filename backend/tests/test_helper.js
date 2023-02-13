@@ -27,6 +27,15 @@ const initialEntries = [
   },
 ]
 
+const initialTitles = [
+  {
+    name: 'Ankara',
+  },
+  {
+    name: 'İstanbul',
+  },
+]
+
 const usersInDb = async () => {
   const users = await User.find({})
   return users.map((user) => user.toJSON())
@@ -39,7 +48,7 @@ const entriesInDb = async () => {
 
 const titlesInDb = async () => {
   const entries = await Title.find({})
-  return entries.map((entry) => entry.title)
+  return entries.map((title) => title.toJSON())
 }
 
 const passwordHashGenerator = async (password) => {
@@ -51,6 +60,7 @@ const passwordHashGenerator = async (password) => {
 export default {
   initialUsers,
   initialEntries,
+  initialTitles,
   usersInDb,
   entriesInDb,
   titlesInDb,
