@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import loginService from "./services/login";
 import storageService from "./services/storage";
 
@@ -24,18 +25,25 @@ function App() {
     }
   };
 
-  if (!user) {
-    return (
-      <div>
-        <LoginForm onLogin={login} />
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <p>{user.username} logged in</p>
-    </div>
+    <Router>
+      <div>
+        <Link to="/login">login</Link>
+      </div>
+
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            user ? (
+              <p>{user.username} logged in</p>
+            ) : (
+              <LoginForm onLogin={login} />
+            )
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
