@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import loginService from "./services/login";
 import storageService from "./services/storage";
-import titleservice from "./services/titles";
+import titleService from "./services/titles";
+import entryService from "./services/entries";
 
 import LoginForm from "./components/LoginForm";
 import PopularTitles from "./components/PopularTitles";
 import Title from "./components/Title";
+import Entry from "./components/Entry";
 
 function App() {
   const [user, setUser] = useState(null);
   const [titles, setTitles] = useState([]);
+  const [entries, setEntries] = useState([]);
 
   useEffect(() => {
     const user = storageService.loadUser();
@@ -20,7 +23,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    titleservice.getAll().then((titles) => setTitles(titles));
+    titleService.getAll().then((titles) => setTitles(titles));
+    entryService.getAll().then((entries) => setEntries(entries));
   }, []);
 
   const login = async (username, password) => {
@@ -56,6 +60,7 @@ function App() {
           element={<PopularTitles titles={titles} />}
         />
         <Route path={`/titles/:id`} element={<Title titles={titles} />} />
+        <Route path="/entries/:id" element={<Entry entries={entries} />} />
       </Routes>
     </Router>
   );
