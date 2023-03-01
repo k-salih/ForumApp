@@ -6,6 +6,7 @@ import titleservice from "./services/titles";
 
 import LoginForm from "./components/LoginForm";
 import PopularTitles from "./components/PopularTitles";
+import Title from "./components/Title";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -54,6 +55,7 @@ function App() {
           path="/popular-titles"
           element={<PopularTitles titles={titles} />}
         />
+        <Route path={`/titles/:id`} element={<Title titles={titles} />} />
       </Routes>
     </Router>
   );

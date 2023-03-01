@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const PopularTitles = ({ titles }) => {
   titles = titles.sort((a, b) => b.entries.length - a.entries.length);
@@ -7,7 +8,9 @@ const PopularTitles = ({ titles }) => {
       {titles.map((title) => (
         <div key={title.id}>
           <li>
-            {title.name} {title.entries.length}
+            <Link to={`/titles/${title.id}`}>
+              {title.name} {title.entries.length}
+            </Link>
           </li>
         </div>
       ))}
