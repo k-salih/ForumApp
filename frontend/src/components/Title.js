@@ -4,6 +4,9 @@ import { useParams, Link } from "react-router-dom";
 const Title = ({ titles }) => {
   const id = useParams().id;
   const title = titles.find((title) => title.id === id);
+
+  if (!title) return null;
+
   return (
     <div>
       <h2>{title.name}</h2>

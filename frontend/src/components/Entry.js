@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 const Entry = ({ entries }) => {
   const id = useParams().id;
   const entry = entries.find((entry) => entry.id === id);
+
+  if (!entry) return null;
+
   return (
     <div>
       <h2>{entry.content}</h2>
