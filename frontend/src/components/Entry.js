@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 const Entry = ({ entries }) => {
   const id = useParams().id;
@@ -9,7 +10,14 @@ const Entry = ({ entries }) => {
 
   return (
     <div>
-      <h2>{entry.content}</h2>
+      <p>{entry.content}</p>
+      <p align="right">
+        {entry.user.username}
+        {" ~ "}
+        {entry.updatedAt
+          ? moment(entry.updatedAt).format("DD.MM.YYYY HH:mm")
+          : moment(entry.createdAt).format("DD.MM.YYYY HH:mm")}
+      </p>
     </div>
   );
 };
