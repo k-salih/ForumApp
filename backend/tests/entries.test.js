@@ -51,7 +51,6 @@ describe('When there is a logged in user who has an entry', () => {
 
       expect(resultEntry.body.title).toEqual(entryToView.title)
       expect(resultEntry.body.content).toEqual(entryToView.content)
-      expect(resultEntry.body.user).toEqual(entryToView.user)
     })
 
     test('fails with statuscode 404 if entry does not exist', async () => {

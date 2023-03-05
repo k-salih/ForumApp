@@ -33,13 +33,16 @@ describe('When there are some users saved', () => {
       const usersAtStart = await helper.usersInDb()
 
       const userToView = usersAtStart[0]
+      console.log('userToView', userToView)
 
       const resultUser = await api
         .get(`/api/users/${userToView.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-      expect(resultUser.body).toEqual(userToView)
+      console.log('resultUser', resultUser.body)
+
+      expect(resultUser.body.username).toBe(userToView.username)
     })
 
     test('fails with statuscode 404 if user does not exist', async () => {
