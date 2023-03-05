@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useParams, Link } from "react-router-dom";
+import Entry from "./Entry";
 
 const Title = ({ titles }) => {
   const id = useParams().id;
@@ -9,12 +10,10 @@ const Title = ({ titles }) => {
 
   return (
     <div>
-      <h2>{title.name}</h2>
+      <h2 align="center">{title.name}</h2>
       {title.entries.map((entry) => (
         <div key={entry.id}>
-          <Link to={`/entries/${entry.id}`}>
-            <p>{entry.content}</p>
-          </Link>
+          <Entry entries={[entry]} />
         </div>
       ))}
     </div>
@@ -29,6 +28,9 @@ Title.propTypes = {
         PropTypes.shape({
           id: PropTypes.string.isRequired,
           content: PropTypes.string.isRequired,
+          user: PropTypes.shape({
+            username: PropTypes.string.isRequired,
+          }).isRequired,
         })
       ).isRequired,
     })
