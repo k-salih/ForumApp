@@ -3,8 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import Entry from "./Entry";
 
 const Title = ({ titles }) => {
-  const id = useParams().id;
-  const title = titles.find((title) => title.id === id);
+  const name = useParams().name;
+  const title = titles.find((title) => title.name === name);
 
   if (!title) return null;
 

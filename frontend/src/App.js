@@ -59,8 +59,8 @@ function App() {
           path="/popular-titles"
           element={<PopularTitles titles={titles} />}
         />
-        <Route path={`/titles/:id`} element={<Title titles={titles} />} />
-        <Route path="/entries/:id" element={<Entry entries={entries} />} />
+        <Route path={`/titles/:name`} element={<Title titles={titles} />} />
+        <Route path={"/entries/:id"} element={<Entry entries={entries} />} />
       </Routes>
     </Router>
   );

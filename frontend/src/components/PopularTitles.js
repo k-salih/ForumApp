@@ -8,7 +8,7 @@ const PopularTitles = ({ titles }) => {
       {titles.map((title) => (
         <div key={title.id}>
           <li>
-            <Link to={`/titles/${title.id}`}>
+            <Link to={`/titles/${title.name}`}>
               {title.name} {title.entries.length}
             </Link>
           </li>
