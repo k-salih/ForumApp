@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Entry from "./Entry";
 
 const User = ({ users }) => {
@@ -16,6 +16,9 @@ const User = ({ users }) => {
       <h2 align="center">{user.username}</h2>
       {user.entries.map((entry) => (
         <div key={entry.id}>
+          <Link to={`/titles/${entry.title}`}>
+            <h3 align="center">{entry.title}</h3>
+          </Link>
           <Entry entries={[entry]} />
         </div>
       ))}
