@@ -6,8 +6,34 @@ const userRouter = Router()
 
 /// GET ALL USERS
 userRouter.get('/', async (req, res) => {
-  const users = await User.find({}).populate('entries', { title: 1, content: 1 })
-  res.json(users)
+  const users = await User.find({})
+    .populate({
+      path: 'entries',
+      select: 'title content user',
+      populate: { path: 'user', select: 'username' },
+    })
+    .lean()
+
+  const transformedUsers = users.map((user) => ({
+    ...user,
+    id: user._id,
+    _id: undefined,
+    password: undefined,
+    entries: user.entries.map((entry) => ({
+      ...entry,
+      user: {
+        ...entry.user,
+        id: entry.user._id,
+        _id: undefined,
+      },
+      id: entry._id,
+      _id: undefined,
+      __v: undefined,
+    })),
+    __v: undefined,
+  }))
+
+  res.json(transformedUsers)
 })
 
 /// GET USER BY ID
