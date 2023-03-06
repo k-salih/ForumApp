@@ -16,7 +16,7 @@ const Entry = ({ entries }) => {
     <div>
       <p>{entry.content}</p>
       <p align="right">
-        {entry.user.username}
+        <Link to={`/users/${entry.user.username}`}>{entry.user.username}</Link>
         {" ~ "}
         {entry.updatedAt
           ? moment(entry.updatedAt).format("DD.MM.YYYY HH:mm")
