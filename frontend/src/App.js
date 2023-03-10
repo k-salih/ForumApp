@@ -42,11 +42,26 @@ function App() {
     }
   };
 
+  const logout = () => {
+    setUser(null);
+    storageService.removeUser();
+  };
+
   return (
     <Router>
       <div>
-        <Link to="/popular-titles"> popular </Link>
-        <Link to="/login">login</Link>
+        <ul>
+          <li>
+            <Link to="/popular-titles"> popular </Link>
+          </li>
+          <li>
+            {user ? (
+              <Link to="/login">logout</Link>
+            ) : (
+              <Link to="/login">login</Link>
+            )}
+          </li>
+        </ul>
       </div>
 
       <Routes>
@@ -54,7 +69,10 @@ function App() {
           path="/login"
           element={
             user ? (
-              <p>{user.username} logged in</p>
+              <div>
+                {user.username} logged in <br />
+                <button onClick={logout}>logout</button>
+              </div>
             ) : (
               <LoginForm onLogin={login} />
             )
