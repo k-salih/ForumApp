@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
+import "./style.css";
+
 import loginService from "./services/login";
 import storageService from "./services/storage";
 import titleService from "./services/titles";
@@ -12,6 +14,7 @@ import PopularTitles from "./components/PopularTitles";
 import Title from "./components/Title";
 import Entry from "./components/Entry";
 import User from "./components/User";
+import NavigationBar from "./components/NavigationBar";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -49,21 +52,7 @@ function App() {
 
   return (
     <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/popular-titles"> popular </Link>
-          </li>
-          <li>
-            {user ? (
-              <Link to="/login">logout</Link>
-            ) : (
-              <Link to="/login">login</Link>
-            )}
-          </li>
-        </ul>
-      </div>
-
+      <NavigationBar />
       <Routes>
         <Route
           path="/login"
