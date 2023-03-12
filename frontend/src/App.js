@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./style.css";
 
@@ -15,6 +15,7 @@ import Title from "./components/Title";
 import Entry from "./components/Entry";
 import User from "./components/User";
 import NavigationBar from "./components/NavigationBar";
+import Profile from "./components/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -74,6 +75,10 @@ function App() {
         <Route path={`/titles/:name`} element={<Title titles={titles} />} />
         <Route path={"/entries/:id"} element={<Entry entries={entries} />} />
         <Route path={"/users/:username"} element={<User users={users} />} />
+        <Route
+          path={"/profile/:username"}
+          element={<Profile users={users} />}
+        />
       </Routes>
     </Router>
   );
