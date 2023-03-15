@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Navbar = (title, user) => {
+const Navbar = ({ titles, user }) => {
   return (
     <nav className="nav">
       <Link to="/" className="site-title">
