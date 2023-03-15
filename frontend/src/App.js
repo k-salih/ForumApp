@@ -53,7 +53,7 @@ function App() {
 
   return (
     <Router>
-      <NavigationBar />
+      <NavigationBar user={user} />
       <Routes>
         <Route
           path="/login"

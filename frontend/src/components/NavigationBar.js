@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
-import storageService from "../services/storage";
 
-const Navbar = () => {
-  const user = storageService.loadUser();
-
+const Navbar = (title, user) => {
   return (
     <nav className="nav">
       <Link to="/" className="site-title">
