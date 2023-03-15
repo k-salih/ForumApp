@@ -12,15 +12,18 @@ const Entry = ({ entries }) => {
 
   if (!entry) return null;
 
+  const updatedAt = entry.updatedAt
+    ? moment(entry.updatedAt).format("DD.MM.YYYY HH:mm")
+    : null;
+  const createdAt = moment(entry.createdAt).format("DD.MM.YYYY HH:mm");
+
   return (
     <div>
       <p>{entry.content}</p>
       <p align="right">
         <Link to={`/users/${entry.user.username}`}>{entry.user.username}</Link>
-        {" ~ "}
-        {entry.updatedAt
-          ? moment(entry.updatedAt).format("DD.MM.YYYY HH:mm")
-          : moment(entry.createdAt).format("DD.MM.YYYY HH:mm")}
+        <br />
+        {updatedAt ? `${createdAt} | ${updatedAt}` : createdAt}
         <br />
         <Link to={`/entries/${entry.id}`}>{`#${entry.id}`}</Link>
       </p>
