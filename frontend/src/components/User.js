@@ -4,10 +4,7 @@ import Entry from "./Entry";
 
 const User = ({ users }) => {
   const username = useParams().username;
-  const user =
-    users.length === 1
-      ? users[0]
-      : users.find((user) => user.username === username);
+  const user = users.find((user) => user.username === username);
 
   if (!user) return null;
 
