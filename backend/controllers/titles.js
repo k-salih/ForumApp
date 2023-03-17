@@ -10,7 +10,7 @@ titleRouter.get('/', async (req, res) => {
   const titles = await Title.find({})
     .populate({
       path: 'entries',
-      select: 'title content user',
+      select: 'title content user createdAt updatedAt',
       populate: { path: 'user', select: 'username' },
     })
     .lean()

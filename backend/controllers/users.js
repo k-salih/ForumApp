@@ -9,7 +9,7 @@ userRouter.get('/', async (req, res) => {
   const users = await User.find({})
     .populate({
       path: 'entries',
-      select: 'title content user',
+      select: 'title content user updatedAt createdAt',
       populate: { path: 'user', select: 'username' },
     })
     .lean()
