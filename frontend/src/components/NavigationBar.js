@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Navbar = ({ titles, user }) => {
+const Navbar = ({ titles, user, handleLogout }) => {
   return (
     <nav className="nav">
       <Link to="/" className="site-title">
@@ -11,6 +11,7 @@ const Navbar = ({ titles, user }) => {
         {user ? (
           <ul>
             <Link to={`/profile/${user.username}`}>Profile</Link>
+            <button onClick={handleLogout}> Logout </button>
           </ul>
         ) : (
           <Link to="/login">Login</Link>

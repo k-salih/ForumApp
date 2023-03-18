@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 
 import "./style.css";
 
@@ -22,6 +27,8 @@ function App() {
   const [titles, setTitles] = useState([]);
   const [entries, setEntries] = useState([]);
   const [users, setUsers] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = storageService.loadUser();
@@ -47,13 +54,19 @@ function App() {
   };
 
   const logout = () => {
+    window.localStorage.removeItem("forumappUser");
     setUser(null);
-    storageService.removeUser();
   };
 
   return (
-    <Router>
-      <NavigationBar user={user} />
+    <>
+      <NavigationBar
+        user={user}
+        handleLogout={() => {
+          logout();
+          navigate("/");
+        }}
+      />
       <Routes>
         <Route
           path="/login"
@@ -61,7 +74,6 @@ function App() {
             user ? (
               <div>
                 {user.username} logged in <br />
-                <button onClick={logout}>logout</button>
               </div>
             ) : (
               <LoginForm onLogin={login} />
@@ -77,10 +89,18 @@ function App() {
         <Route path={"/users/:username"} element={<User users={users} />} />
         <Route
           path={"/profile/:username"}
-          element={<Profile users={users} />}
+          element={
+            <Profile
+              users={users}
+              handleLogout={() => {
+                logout();
+                navigate("/");
+              }}
+            />
+          }
         />
       </Routes>
-    </Router>
+    </>
   );
 }
 
