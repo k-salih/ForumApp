@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import "./style.css";
 
@@ -62,6 +57,7 @@ function App() {
     <>
       <NavigationBar
         user={user}
+        titles={titles}
         handleLogout={() => {
           logout();
           navigate("/");
