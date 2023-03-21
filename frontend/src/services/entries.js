@@ -1,9 +1,15 @@
 import axios from "axios";
 
 const baseUrl = "http://localhost:3001/api/entries";
-const authorization = `Bearer ${
-  JSON.parse(window.localStorage.getItem("forumappUser")).token
-}`;
+
+let authorization;
+try {
+  authorization = `Bearer ${
+    JSON.parse(window.localStorage.getItem("forumappUser")).token
+  }`;
+} catch (error) {
+  console.log("No user logged in");
+}
 
 const getAll = async () => {
   const response = await axios.get(baseUrl);
@@ -27,7 +33,7 @@ const remove = async (id) => {
   const config = {
     headers: { Authorization: authorization },
   };
-  const response = await axios.delete(`${baseUrl}/${id}`, config);
+  await axios.delete(`${baseUrl}/${id}`, config);
 };
 
 const entryService = { getAll, create, update, remove };
