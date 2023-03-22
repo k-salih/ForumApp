@@ -15,7 +15,7 @@ const SearchBar = ({ onSearch, titles }) => {
       return;
     }
     const results = titles.filter((title) =>
-      title.name.toLowerCase().includes(searchTerm)
+      title.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
   }, [searchTerm, titles]);
