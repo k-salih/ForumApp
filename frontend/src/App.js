@@ -13,6 +13,7 @@ import LoginForm from "./components/LoginForm";
 import PopularTitles from "./components/PopularTitles";
 import Title from "./components/Title";
 import Entry from "./components/Entry";
+import EditEntry from "./components/EditEntry";
 import User from "./components/User";
 import NavigationBar from "./components/NavigationBar";
 import Profile from "./components/Profile";
@@ -82,6 +83,10 @@ function App() {
         />
         <Route path={`/titles/:name`} element={<Title titles={titles} />} />
         <Route path={"/entries/:id"} element={<Entry entries={entries} />} />
+        <Route
+          path={"/entries/:id/edit"}
+          element={<EditEntry entries={entries} />}
+        />
         <Route path={"/users/:username"} element={<User users={users} />} />
         <Route
           path={"/profile/:username"}

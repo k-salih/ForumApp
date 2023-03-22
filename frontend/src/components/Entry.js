@@ -17,6 +17,10 @@ const Entry = ({ entries }) => {
     : null;
   const createdAt = moment(entry.createdAt).format("DD.MM.YYYY HH:mm");
 
+  const loggedInUser = JSON.parse(window.localStorage.getItem("forumappUser"));
+
+  const isOwner = loggedInUser && loggedInUser.username === entry.user.username;
+
   return (
     <div>
       <p>{entry.content}</p>
@@ -27,6 +31,11 @@ const Entry = ({ entries }) => {
         <br />
         <Link to={`/entries/${entry.id}`}>{`#${entry.id}`}</Link>
       </p>
+      {isOwner && (
+        <div>
+          <Link to={`/entries/${entry.id}/edit`}>Edit</Link>
+        </div>
+      )}
     </div>
   );
 };
