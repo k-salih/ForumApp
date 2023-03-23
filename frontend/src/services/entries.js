@@ -17,7 +17,10 @@ const getAll = async () => {
 };
 
 const create = async (newObject) => {
-  const response = await axios.post(baseUrl, newObject);
+  const config = {
+    headers: { Authorization: authorization },
+  };
+  const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };
 
