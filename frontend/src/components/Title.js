@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useParams, Link } from "react-router-dom";
 import Entry from "./Entry";
+import EntryForm from "./EntryForm";
 
 const Title = ({ titles }) => {
   const name = useParams().name;
@@ -16,6 +17,9 @@ const Title = ({ titles }) => {
           <Entry entries={[entry]} />
         </div>
       ))}
+      <div align="center">
+        <EntryForm title={title.name} />
+      </div>
     </div>
   );
 };
