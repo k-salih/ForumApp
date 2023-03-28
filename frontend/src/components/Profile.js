@@ -1,6 +1,10 @@
+import { createContext, useContext } from "react";
+import { UsersContext } from "../App";
 import User from "./User";
 
-const Profile = ({ users }) => {
+const Profile = () => {
+  const users = useContext(UsersContext);
+
   const loggedInUser = JSON.parse(window.localStorage.getItem("forumappUser"));
   const user = users.find((user) => user.username === loggedInUser.username);
 

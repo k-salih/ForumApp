@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import "./style.css";
@@ -17,6 +17,8 @@ import EditEntry from "./components/EditEntry";
 import User from "./components/User";
 import NavigationBar from "./components/NavigationBar";
 import Profile from "./components/Profile";
+
+export const UsersContext = createContext();
 
 function App() {
   const [user, setUser] = useState(null);
@@ -56,51 +58,52 @@ function App() {
 
   return (
     <>
-      <NavigationBar
-        user={user}
-        titles={titles}
-        handleLogout={() => {
-          logout();
-          navigate("/");
-        }}
-      />
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            user ? (
-              <div>
-                {user.username} logged in <br />
-              </div>
-            ) : (
-              <LoginForm onLogin={login} />
-            )
-          }
+      <UsersContext.Provider value={users}>
+        <NavigationBar
+          user={user}
+          titles={titles}
+          handleLogout={() => {
+            logout();
+            navigate("/");
+          }}
         />
-        <Route
-          path="/popular-titles"
-          element={<PopularTitles titles={titles} />}
-        />
-        <Route path={`/titles/:name`} element={<Title titles={titles} />} />
-        <Route path={"/entries/:id"} element={<Entry entries={entries} />} />
-        <Route
-          path={"/entries/:id/edit"}
-          element={<EditEntry entries={entries} />}
-        />
-        <Route path={"/users/:username"} element={<User users={users} />} />
-        <Route
-          path={"/profile/:username"}
-          element={
-            <Profile
-              users={users}
-              handleLogout={() => {
-                logout();
-                navigate("/");
-              }}
-            />
-          }
-        />
-      </Routes>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              user ? (
+                <div>
+                  {user.username} logged in <br />
+                </div>
+              ) : (
+                <LoginForm onLogin={login} />
+              )
+            }
+          />
+          <Route
+            path="/popular-titles"
+            element={<PopularTitles titles={titles} />}
+          />
+          <Route path={`/titles/:name`} element={<Title titles={titles} />} />
+          <Route path={"/entries/:id"} element={<Entry entries={entries} />} />
+          <Route
+            path={"/entries/:id/edit"}
+            element={<EditEntry entries={entries} />}
+          />
+          <Route path={"/users/:username"} element={<User users={users} />} />
+          <Route
+            path={"/profile/:username"}
+            element={
+              <Profile
+                handleLogout={() => {
+                  logout();
+                  navigate("/");
+                }}
+              />
+            }
+          />
+        </Routes>
+      </UsersContext.Provider>
     </>
   );
 }
