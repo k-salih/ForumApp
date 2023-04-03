@@ -90,7 +90,7 @@ function App() {
             path={"/entries/:id/edit"}
             element={<EditEntry entries={entries} />}
           />
-          <Route path={"/users/:username"} element={<User users={users} />} />
+          <Route path={"/users/:username"} element={<User />} />
           <Route
             path={"/profile/:username"}
             element={

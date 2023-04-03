@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
+import { useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import Entry from "./Entry";
+import { UsersContext } from "../App";
 
-const User = ({ users }) => {
+const User = () => {
+  const users = useContext(UsersContext);
+
   const username = useParams().username;
   const user = users.find((user) => user.username === username);
 
