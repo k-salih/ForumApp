@@ -25,8 +25,7 @@ describe('When there is a logged in user who has an entry', () => {
     for (const entry of helper.initialEntries) {
       const entryObject = await new Entry({ ...entry, user: userObject._id })
       await entryObject.save()
-      const titleObject = await new Title({ name: entry.title })
-      titleObject.entries = titleObject.entries.concat(entryObject._id)
+      const titleObject = await new Title({ title: entry.title })
       await titleObject.save()
     }
   })

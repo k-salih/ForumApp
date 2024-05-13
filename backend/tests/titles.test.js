@@ -17,7 +17,7 @@ describe('when there is initially some titles saved', () => {
     await Title.deleteMany({})
 
     for (const title of helper.initialTitles) {
-      const titleObject = new Title(title)
+      const titleObject = new Title({ title: title.title })
       await titleObject.save()
     }
   })
@@ -28,14 +28,19 @@ describe('when there is initially some titles saved', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
     expect(response.body).toHaveLength(helper.initialTitles.length)
-    expect(response.body.map((title) => title.name)).toContain('Ankara')
-    expect(response.body.map((title) => title.name)).toContain('İstanbul')
+    expect(response.body.map((title) => title.title)).toContain('Ankara')
+    expect(response.body.map((title) => title.title)).toContain('İstanbul')
   })
 
   describe('viewing a specific title', () => {
     test('succeeds with a valid id', async () => {
       const titlesAtStart = await helper.titlesInDb()
-      const titleToView = titlesAtStart[0]
+      const titleToView = {
+        ...titlesAtStart[0],
+        created_at: titlesAtStart[0].created_at.toISOString(),
+        updated_at: titlesAtStart[0].updated_at.toISOString(),
+      }
+
       const resultTitle = await api
         .get(`/api/titles/${titleToView.id}`)
         .expect(200)

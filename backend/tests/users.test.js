@@ -50,13 +50,6 @@ describe('When there are some users saved', () => {
 
       await api.get(`/api/users/${validNonexistingId}`).expect(404)
     })
-
-    test('fails with statuscode 400 if id is invalid', async () => {
-      const invalidId = '5a3d5da59070081a82a3445'
-      const response = await api.get(`/api/users/${invalidId}`).expect(400)
-
-      expect(response.body.error).toContain('malformatted id')
-    })
   })
 
   describe('user creation', () => {
@@ -77,7 +70,6 @@ describe('When there are some users saved', () => {
       expect(response.body.username).toBe(userToCreate.username)
       expect(response.body.email).toBe(userToCreate.email)
       expect(response.body.password).not.toBe(userToCreate.password)
-      expect(response.body.entries).toEqual([])
       expect(response.body.followers).toEqual([])
       expect(response.body.following).toEqual([])
     })

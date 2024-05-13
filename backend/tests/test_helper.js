@@ -29,10 +29,10 @@ const initialEntries = [
 
 const initialTitles = [
   {
-    name: 'Ankara',
+    title: 'Ankara',
   },
   {
-    name: 'İstanbul',
+    title: 'İstanbul',
   },
 ]
 
@@ -47,8 +47,8 @@ const entriesInDb = async () => {
 }
 
 const titlesInDb = async () => {
-  const entries = await Title.find({})
-  return entries.map((title) => title.toJSON())
+  const titles = await Title.find({})
+  return titles.map((title) => title.toJSON())
 }
 
 const passwordHashGenerator = async (password) => {

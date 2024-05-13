@@ -37,18 +37,13 @@ entryRouter.post('/', async (req, res) => {
 
   const savedEntry = await entry.save()
 
-  const existingTitle = await Title.findOne({ name: req.body.title })
+  const existingTitle = await Title.findOne({ title: req.body.title })
 
   if (!existingTitle) {
-    const title = new Title({ name: req.body.title })
-    title.entries = title.entries.concat(savedEntry._id)
+    const title = new Title({ title: req.body.title })
     await title.save()
-  } else {
-    existingTitle.entries = existingTitle.entries.concat(savedEntry._id)
-    await existingTitle.save()
   }
 
-  user.entries = user.entries.concat(savedEntry._id)
   await user.save()
 
   res.json(savedEntry)
