@@ -135,7 +135,7 @@ describe('When there is a logged in user who has an entry', () => {
 
       const response = await api.post('/api/entries').send(newEntry).expect(401)
 
-      expect(response.body.error).toContain('Invalid or missing token')
+      expect(response.body.error).toContain('Unauthorized!')
     })
 
     test('succeds while posting a new entry to an existing title', async () => {
@@ -229,7 +229,7 @@ describe('When there is a logged in user who has an entry', () => {
       }
 
       const response = await api.put(`/api/entries/${entryToUpdate.id}`).send(updatedEntry).expect(401)
-      expect(response.body.error).toContain('Invalid or missing token')
+      expect(response.body.error).toContain('Unauthorized!')
     })
 
     test('fails if logged in user updates an entry that is not theirs', async () => {
@@ -296,10 +296,10 @@ describe('When there is a logged in user who has an entry', () => {
 
     test('fails if user is not logged in', async () => {
       const entriesAtStart = await helper.entriesInDb()
-      const entrToDelete = entriesAtStart[0]
+      const entryToDelete = entriesAtStart[0]
 
-      const response = await api.delete(`/api/entries/${entrToDelete.id}`).expect(401)
-      expect(response.body.error).toContain('Invalid or missing token')
+      const response = await api.delete(`/api/entries/${entryToDelete.id}`).expect(401)
+      expect(response.body.error).toContain('Unauthorized!')
     })
 
     test('fails if entry does not exist', async () => {

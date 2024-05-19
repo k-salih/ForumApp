@@ -5,15 +5,12 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import 'express-async-errors'
 
-import userRouter from './controllers/users.js'
-import entryRouter from './controllers/entries.js'
-import loginRouter from './controllers/login.js'
-import titleRouter from './controllers/titles.js'
-import middleware from './utils/middleware.js'
+import apiRouter from './routers/index.js'
+import { errorHandler } from './utils/middleware.js'
 
 const app = express()
 
-logger.info('connecting to', config.MONGODB_URI)
+logger.info('Connecting to', config.MONGODB_URI)
 
 mongoose.set('strictQuery', false)
 
@@ -23,20 +20,18 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    logger.info('connected to MongoDB')
+    logger.info('Connected to MongoDB')
   })
   .catch((error) => {
-    logger.error('error connecting to MongoDB:', error.message)
+    logger.error('Error connecting to MongoDB:', error.message)
   })
 
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/users', middleware.userExtractor, userRouter)
-app.use('/api/entries', middleware.userExtractor, entryRouter)
-app.use('/api/login', loginRouter)
-app.use('/api/titles', titleRouter)
+// Use the centralized API router
+app.use('/api', apiRouter)
 
-app.use(middleware.errorHandler)
-
+// Error handling middleware
+app.use(errorHandler)
 export default app

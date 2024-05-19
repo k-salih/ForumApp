@@ -262,7 +262,7 @@ describe('When there are some users saved', () => {
 
       expect(usersAtEnd[1].followers).toHaveLength(userToFollow.followers.length)
 
-      expect(response.body.error).toContain('token missing or invalid')
+      expect(response.body.error).toContain('Unauthorized!')
     })
 
     test('fails with status code 404 if user to follow is not found', async () => {
@@ -349,7 +349,7 @@ describe('When there are some users saved', () => {
 
       expect(usersAtEnd[1].followers).toHaveLength(userToUnfollow.followers.length)
 
-      expect(response.body.error).toContain('token missing or invalid')
+      expect(response.body.error).toContain('Unauthorized!')
     })
 
     test('fails with status code 404 if user to unfollow is not found', async () => {
